@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import streamlit as st
 from PIL import Image
+import io
 
 
 def main():
@@ -75,6 +76,14 @@ def main():
                  use_column_width=True)
         st.write(f"Area of ones: {ones_area} pixels")
         st.write(f"Ratio of ones to zeros: {ratio_ones_to_zeros:.4f}")
+
+        # Add an export button to download the final image
+        result_image = Image.fromarray(maximal_area)
+        buf = io.BytesIO()
+        result_image.save(buf, format="PNG")
+        byte_im = buf.getvalue()
+        st.download_button(label="Download Processed Image", data=byte_im,
+                           file_name="processed_image.png", mime="image/png")
 
 
 if __name__ == "__main__":
