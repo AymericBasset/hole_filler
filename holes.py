@@ -117,10 +117,13 @@ def main():
         ones_in_mask = np.sum(new_binary[mask_area] == 255)
         total_mask_area = np.sum(mask_area)
         proportion_ones = ones_in_mask / total_mask_area
+        proportion_ones_2 = ones_in_mask / ones_area
 
         # Display the result
         st.write(
-            f"Proportion of pixels that are ones in the mask area: {proportion_ones:.4f}")
+            f"Proportion of pixels that are ones in the mask area ?: {proportion_ones:.4f}")
+        st.write(
+            f"Proportion of pixels that are ones in the mask area: {proportion_ones_2:.4f}")
 
         # Add an export button to download the thresholded new image
         new_threshold_image = Image.fromarray(new_binary)
