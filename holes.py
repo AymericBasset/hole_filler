@@ -21,13 +21,13 @@ def main():
 
         # Sliders to adjust morphological operations
         dilation_kernel_size = st.slider(
-            "Dilation kernel size", min_value=1, max_value=15, value=5, step=2)
+            "Dilation kernel size", min_value=1, max_value=15, value=25, step=1)
         dilation_iterations = st.slider(
-            "Dilation iterations", min_value=1, max_value=10, value=1, step=1)
+            "Dilation iterations", min_value=1, max_value=20, value=1, step=1)
         erosion_kernel_size = st.slider(
-            "Erosion kernel size", min_value=1, max_value=15, value=5, step=2)
+            "Erosion kernel size", min_value=1, max_value=25, value=5, step=2)
         erosion_iterations = st.slider(
-            "Erosion iterations", min_value=1, max_value=10, value=1, step=1)
+            "Erosion iterations", min_value=1, max_value=20, value=1, step=1)
         hole_size = st.slider("Max hole size to fill",
                               min_value=1, max_value=10000, value=50, step=10)
 
