@@ -33,6 +33,8 @@ def main():
                 "Erosion iterations", min_value=1, max_value=20, value=1, step=1)
             hole_size = st.slider("Max hole size to fill",
                                   min_value=1, max_value=10000, value=50, step=10)
+            top_n_components = st.slider("Number of largest connected components to keep",
+                                         min_value=1, max_value=10, value=1, step=1)
 
         # Convert to grayscale
         gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
@@ -61,12 +63,14 @@ def main():
             if area < hole_size:
                 cv2.drawContours(cleaned, [contour], 0, 255, -1)
 
-        # Keep only the largest connected component
+        # Keep the top n largest connected components
         num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(
             cleaned, connectivity=8)
-        largest_component = 1 + np.argmax(stats[1:, cv2.CC_STAT_AREA])
+        sorted_indices = np.argsort(stats[1:, cv2.CC_STAT_AREA])[::-1] + 1
+        top_components = sorted_indices[:top_n_components]
         maximal_area = np.zeros_like(cleaned)
-        maximal_area[labels == largest_component] = 255
+        for component in top_components:
+            maximal_area[labels == component] = 255
 
         # Calculate area of the ones and the ratio of ones to zeros
         ones_area = np.sum(maximal_area == 255)
@@ -75,7 +79,7 @@ def main():
 
         with col2:
             # Display the processed image
-            st.image(maximal_area, caption='Processed Image with Maximal Connected Area',
+            st.image(maximal_area, caption='Processed Image with Top Connected Areas',
                      use_column_width=True)
         st.write(f"Area of ones: {ones_area} pixels")
         st.write(f"Ratio of ones to zeros: {ratio_ones_to_zeros:.4f}")
@@ -88,8 +92,7 @@ def main():
         st.download_button(label="Download Processed Image", data=byte_im,
                            file_name="processed_image.png", mime="image/png")
 
-        # Step to upload a new image to apply mask
-
+    # Step to upload a new image to apply mask
     st.write("Upload a new image to apply the mask.")
     new_uploaded_file = st.file_uploader(
         "Choose another JPG image", type="jpg", key="new_image")
